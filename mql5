@@ -1,0 +1,98 @@
+
+//+------------------------------------------------------------------+
+//|                        Price Action Pro EA                        |
+//|              Forex Robot Easy - forexroboteasy.com                |
+//+------------------------------------------------------------------+
+
+// Declare input parameters
+input double LotSize = 0.01; // Lot size for each trade
+input int StopLoss = 100; // Stop loss in pips
+input int TakeProfit = 200; // Take profit in pips
+input int MaxSpread = 10; // Maximum allowed spread in points
+
+// Declare global variables
+double ask, bid, spread;
+int ticket;
+
+//+------------------------------------------------------------------+
+//|                      Expert initialization                       |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   // Join MQL5 group membership
+   JoinMQL5GroupMembership();
+
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//|                     Expert deinitialization                       |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Leave MQL5 group membership
+   LeaveMQL5GroupMembership();
+}
+
+//+------------------------------------------------------------------+
+//|                        Expert start function                      |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Calculate algorithm results in every tick
+   CalculateAlgorithm();
+
+   // Filter out unfavorable trades based on algorithm results
+   if (ShouldOpenTrade())
+   {
+      // Open a trade
+      ticket = OrderSend(Symbol(), OP_BUY, LotSize, Ask, Slippage, 0, 0, 'Price Action Pro EA', MagicNumber, 0, Green);
+   }
+}
+
+//+------------------------------------------------------------------+
+//|                     Calculate algorithm results                   |
+//+------------------------------------------------------------------+
+void CalculateAlgorithm()
+{
+   // Calculate ask, bid, and spread
+   ask = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
+   bid = SymbolInfoDouble(Symbol(), SYMBOL_BID);
+   spread = (ask - bid) / Point;
+   
+   // Perform algorithm calculations
+   // ... (Add your algorithm calculations here)
+}
+
+//+------------------------------------------------------------------+
+//|               Filter out unfavorable trades                       |
+//+------------------------------------------------------------------+
+bool ShouldOpenTrade()
+{
+   // Check if spread is within allowed limits
+   if (spread > MaxSpread)
+      return false;
+
+   // Check if there are any other unfavorable conditions
+   // ... (Add your filtering conditions here)
+
+   return true;
+}
+
+//+------------------------------------------------------------------+
+//|                Join MQL5 group membership                         |
+//+------------------------------------------------------------------+
+void JoinMQL5GroupMembership()
+{
+   // Connect to MQL5 group membership API
+   // ... (Add your code to connect to the MQL5 group membership API)
+}
+
+//+------------------------------------------------------------------+
+//|               Leave MQL5 group membership                         |
+//+------------------------------------------------------------------+
+void LeaveMQL5GroupMembership()
+{
+   // Disconnect from MQL5 group membership API
+   // ... (Add your code to disconnect from the MQL5 group membership API)
+}
